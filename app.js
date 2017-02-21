@@ -7,22 +7,17 @@ AWS.config.update({
 });
 var s3 = new AWS.S3({endpoint: 's3-api.us-geo.objectstorage.softlayer.net'} ); 
 var parms = { Bucket: 'takeyan'} ;
-var st;
 
 app.get('/', function(req, res) {
-
  s3.listObjects(parms, function (err, data) {
-  if(err){
-      st = err;
-      console.log("### ERROR:" + st);
+  if(err) console.log("### ERROR:" + err);
+  else {
+      console.log(data);
+      res.send('### Response from ICOS:' + JSON.stringify(data));
   }
-  st = data;
-  console.log(st);
  });
- 
- res.send('### Response from ICOS:' + JSON.stringify(st));
 });
 
 var port = process.env.PORT || 3000;
 app.listen(port);
-console.log('listening at:', port);
+console.log('### listening at:', port);
