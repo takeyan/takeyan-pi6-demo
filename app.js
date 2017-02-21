@@ -1,6 +1,6 @@
 var AWS = require('aws-sdk'); 
 var express = require('express');
-app = express();
+var app = express();
 AWS.config.update({
 	accessKeyId: 'J8aPAKcK9TafeYO9YhVE',
 	secretAccessKey: 'opDKChX0NwT5AvQkS9lbOgjiKhaReYgmiUuhAgr3',
