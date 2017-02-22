@@ -1,0 +1,5 @@
+     applications:  
+      - name: takeyan-pi-demo  
+        memory: 256M  
+        instances: 1  
+        path: .  
