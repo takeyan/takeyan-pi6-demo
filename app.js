@@ -25,12 +25,13 @@ personality_insights.profile({
    language:'ja',
    accept_language:'ja'
    },
-   function (err, response) {
+   function (err, insights) {
      if (err)
        console.log('error:', err);
      else
-       console.log(JSON.stringify(response, null, 2));
-       res.send(response);
+       console.log(JSON.stringify(insights, null, 2));
+       res.send(insights);
+       console.log("### Response retunred");
  }); 
 });
 
