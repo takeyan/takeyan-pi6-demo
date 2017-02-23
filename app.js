@@ -1,6 +1,39 @@
 var watson = require('watson-developer-cloud');
 var express = require('express');
+var bodyParser = require("body-parser");
+var path = require('path');
 var app = express();
+
+// Setup static public directory
+app.use(express.static(path.join(__dirname , './public')));
+app.use(bodyParser.urlencoded({ extended: false }));
+
+
+app.post('/pi-analyze', function(req, res) {
+ 
+var personality_insights = watson.personality_insights({
+   username: '8e6e7927-3343-491b-9932-81a81835f4a5',
+   password: 'XgTNfJyoEkIt',
+  version: 'v2'
+});
+console.log("### Input BODY is: " + JSON.stringify(req.body));
+console.log("### Input Text is: " + req.body.text);
+
+personality_insights.profile({
+   text: req.body.text,
+   content_type:'text/plain',
+   language:'ja',
+   accept_language:'ja'
+   },
+   function (err, response) {
+     if (err)
+       console.log('error:', err);
+     else
+       console.log(JSON.stringify(response, null, 2));
+       res.send(response);
+ }); 
+});
+
 
 // 安倍首相所信表明抜粋
 var st =  "世界一への執念。";
