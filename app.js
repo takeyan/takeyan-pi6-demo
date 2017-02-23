@@ -1,8 +1,15 @@
 var watson = require('watson-developer-cloud');
+var PersonalityInsightsV3 = require('watson-developer-cloud/personality-insights/v3');
 var express = require('express');
 var bodyParser = require("body-parser");
 var path = require('path');
+
 var app = express();
+var personality_insights = new PersonalityInsightsV3({
+   username: '8e6e7927-3343-491b-9932-81a81835f4a5',
+   password: 'XgTNfJyoEkIt',
+   version_date: '2016-10-20'
+});
 
 // Setup static public directory
 app.use(express.static(path.join(__dirname , './public')));
@@ -11,28 +18,38 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post('/pi-analyze', function(req, res) {
  
-var personality_insights = watson.personality_insights({
-   username: '8e6e7927-3343-491b-9932-81a81835f4a5',
-   password: 'XgTNfJyoEkIt',
-  version: 'v2'
-});
 console.log("### Input BODY is: " + JSON.stringify(req.body));
 console.log("### Input Text is: " + req.body.text);
 
-personality_insights.profile({
-   text: req.body.text,
-   content_type:'text/plain',
-   language:'ja',
-   accept_language:'ja'
-   },
-   function (err, insights) {
-     if (err)
-       console.log('error:', err);
-     else
-       console.log(JSON.stringify(insights, null, 2));
-       res.send(insights);
-       console.log("### Response retunred");
- }); 
+var contentItems = Array();
+contentItems[0] = {
+	 "content": req.body.text, 
+	 "contenttype": "text/plain", 
+	 "created": 1447639154000,
+	 "id": "666073008692314113",
+	 "language": "ja"
+ };
+
+var params = {
+  // Get the content items from the JSON file.
+  content_items: contentItems,
+  consumption_preferences: true,
+  raw_scores: true,
+  headers: {
+    'accept-language': 'ja',
+    'accept': 'application/json'
+  }
+};
+
+personality_insights.profile(params, function(error, response) {
+  if (error)
+    console.log('Error:', error);
+  else
+    console.log(JSON.stringify(response, null, 2));
+       res.header("Content-Type", "application/json; charset=utf-8");
+       res.send(response);
+  }
+);
 });
 
 
