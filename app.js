@@ -11,6 +11,25 @@ var personality_insights = new PersonalityInsightsV3({
    version_date: '2016-10-20'
 });
 
+//-----S.T. Cloudant --------------
+var Cloudant = require("cloudant");
+var dbname = "minutes";
+
+if (typeof process.env.VCAP_SERVICES === 'undefined') {
+    credentials = require('./cloudant.json');
+    } else {
+    var services = JSON.parse(process.env.VCAP_SERVICES)
+    credentials = services['cloudantNoSQLDB'][0].credentials;
+    };
+var username = credentials.username;
+var password = credentials.password;
+var cloudant = Cloudant({account:username, password:password, plugin:'retry'});
+// cloudant.db.destroy(dbname);
+// cloudant.db.create(dbname);
+var s2srecdb = cloudant.db.use(dbname);
+//---------------------------------------
+
+
 // Setup static public directory
 app.use(express.static(path.join(__dirname , './public')));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -18,39 +37,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post('/pi-analyze', function(req, res) {
  
-console.log("### Input BODY is: " + JSON.stringify(req.body));
-console.log("### Input Text is: " + req.body.text);
 
-var contentItems = Array();
-contentItems[0] = {
-	 "content": req.body.text, 
-	 "contenttype": "text/plain", 
-	 "created": 1447639154000,
-	 "id": "666073008692314113",
-	 "language": "ja"
- };
-
-var params = {
-  // Get the content items from the JSON file.
-  content_items: contentItems,
-  consumption_preferences: true,
-  raw_scores: true,
-  headers: {
-    'accept-language': 'ja',
-    'accept': 'application/json'
-  }
-};
-
-personality_insights.profile(params, function(error, response) {
-  if (error)
-    console.log('Error:', error);
-  else
-    console.log(JSON.stringify(response, null, 2));
-       res.header("Content-Type", "application/json; charset=utf-8");
-       res.send(response);
-  }
-);
+s2srecdb.get("PIonly", {revs_info:true}, function(err, body, header) {
+    if (err) {
+console.log("### Erorr:" + err);
+        }
+     else {
+             res.header("Content-Type", "application/json; charset=utf-8");
+             res.send(body.PI);
+      }
+    });
 });
+
 
 
 // 安倍首相所信表明抜粋

@@ -1,5 +1,9 @@
      applications:  
-      - name: takeyan-pi-demo  
+      - name: takeyan-pi6-demo  
         memory: 256M  
         instances: 1  
         path: .  
+        command: node app.js
+        buildpack: sdk-for-nodejs       
+        services:
+        - cloudant-s2rec
