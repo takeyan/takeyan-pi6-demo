@@ -16,12 +16,9 @@
 <body>
 
 <div class="container-fluid">
-    <h1>Node-RED Personality Insights サンプル</h1>
-    <div>
-        <textarea class="form-control" id="textId" rows="10" placeholder="テキストを入力してください。"></textarea>
-    </div>
+    <h1>Personality Insights サンプル</h1>
     <div style="margin: 5px 0">
-        <button class="btn btn-primary btn-block" id="analyzeId">分析する</button>
+        <button class="btn btn-primary btn-block" id="analyzeId">スタート</button>
     </div>
     <div id="statusId"></div>
     <ul class="nav nav-tabs nav-justified">
@@ -42,7 +39,7 @@
         $('#analyzeId').on('click', function () {
             var resultId = $('#resultId');
             var statusId = $('#statusId');
-            var text = $('#textId').val();
+            var text = "aaa";
             if (text.length >= 1) {
                 statusId.html('<p class="text-info">分析中です (遅いな？と思ったらNode-REDのdebugを確認してください。)・・・</p>');
 
